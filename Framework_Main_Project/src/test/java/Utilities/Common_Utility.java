@@ -88,16 +88,36 @@ public class Common_Utility {
 		return driver;
 	}
 
-	public WebElement wait(WebDriver driver, int time, String xpath) {
+	// Wait for visibility of element
+	public WebElement waitForElementVisible(WebDriver driver, int time, String xpath) {
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(time));
 		WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
 		return element;
 	}
 
+	// Wait for element to be clickable
 	public WebElement waitatelementToBeClickable(WebDriver driver, int time, String xpath) {
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(time));
 		WebElement element = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(xpath)));
 		return element;
+	}
+
+	// Wait for presence of element in DOM
+	public WebElement waitForElementPresent(WebDriver driver, int time, String xpath) {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(time));
+		return wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpath)));
+	}
+
+	// Wait for a specific title
+	public boolean waitForTitleContains(WebDriver driver, int time, String partialTitle) {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(time));
+		return wait.until(ExpectedConditions.titleContains(partialTitle));
+	}
+
+	// Wait for element to disappear
+	public boolean waitForElementInvisible(WebDriver driver, int time, String xpath) {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(time));
+		return wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(xpath)));
 	}
 
 	public String handleAlert(WebDriver driver, int timeout, String alertXpath) {
@@ -172,5 +192,5 @@ public class Common_Utility {
 		extent.attachReporter(htmlReporter);
 		return extent;
 	}
-	
+
 }
