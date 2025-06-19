@@ -3,6 +3,8 @@ package Utilities;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Properties;
+
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -12,8 +14,11 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 public class ExcelReader {
-	public String[][] getData(String excelSheetName, int startRow, int startCol)throws EncryptedDocumentException, IOException {
-		File file = new File("C:\\Users\\User1\\eclipse-workspace\\Solar_automation_project\\src\\test\\resources\\testdata\\testdata.xlsx");
+	public String[][] getData(String excelSheetName, int startRow, int startCol)
+			throws EncryptedDocumentException, IOException {
+		Common_Utility common_utility = new Common_Utility();
+		Properties prop = common_utility.getConfigProperties();
+		File file = new File(prop.getProperty("excelsheet_path"));
 		FileInputStream fis = new FileInputStream(file);
 		Workbook wb = WorkbookFactory.create(fis);
 		Sheet sheet = wb.getSheet(excelSheetName);

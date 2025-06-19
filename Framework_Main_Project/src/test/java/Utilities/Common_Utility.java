@@ -30,62 +30,23 @@ import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class Common_Utility {
+	public static Properties prop;
+	public static Properties loc;
+
 	public Properties getConfigProperties() throws IOException {
-		Properties prop = new Properties();
-
+		prop = new Properties();
 		FileInputStream fis = new FileInputStream(
-				"C:\\Users\\User1\\eclipse-workspace\\Trythat.ai_Automation\\src\\test\\resources\\Configfiles\\config.properties");
-
+				"C:\\Users\\User1\\eclipse-workspace\\Framework_Main_Project\\src\\test\\resources\\Configfiles\\config.properties");
 		prop.load(fis);
-
 		return prop;
 	}
 
 	public Properties getLocator() throws IOException {
-
-		Properties loc = new Properties();
-
+		loc = new Properties();
 		FileReader fr1 = new FileReader(
-				"C:\\Users\\User1\\eclipse-workspace\\Trythat.ai_Automation\\src\\test\\resources\\Configfiles\\locators.properties");
-
+				"C:\\Users\\User1\\eclipse-workspace\\Framework_Main_Project\\src\\test\\resources\\Configfiles\\locators.properties");
 		loc.load(fr1);
 		return loc;
-	}
-
-	public WebDriver initiateWebsite() throws IOException {
-		WebDriver driver = null;
-		Properties prop = null;
-		Properties loc = null;
-		ChromeOptions options = null;
-		FirefoxOptions options1 = null;
-		EdgeOptions options2 = null;
-		if (driver == null) {
-			prop = this.getConfigProperties();
-			loc = this.getLocator();
-		}
-		String browser = prop.getProperty("browser");
-		if (browser != null && browser.equalsIgnoreCase("Chrome")) {
-			System.setProperty("Webdriver.chrome.driver", "C:\\Test Chrome\\chromedriver-win64");
-			options = new ChromeOptions();
-			options.setBinary("C:\\Test Chrome\\chrome-win64\\chrome-win64\\chrome.exe");
-			options.addArguments("--disable-notification");
-			driver = new ChromeDriver(options);
-			driver.manage().window().maximize();
-			driver.get(prop.getProperty("testurl"));
-		} else if (browser != null && browser.equalsIgnoreCase("firefox")) {
-			WebDriverManager.firefoxdriver().setup();
-			options1 = new FirefoxOptions();
-			driver = new FirefoxDriver();
-			driver.manage().window().maximize();
-			driver.get(prop.getProperty("testurl"));
-		} else if (browser != null && browser.equalsIgnoreCase("Edge")) {
-			WebDriverManager.edgedriver().setup();
-			options2 = new EdgeOptions();
-			driver = new EdgeDriver();
-			driver.manage().window().maximize();
-			driver.get(prop.getProperty("testurl"));
-		}
-		return driver;
 	}
 
 	// Wait for visibility of element
@@ -132,12 +93,11 @@ public class Common_Utility {
 			System.out.println("Alert disappeared before we could interact with it.");
 			return null;
 		}
-
 	}
 
 	public WebDriver captureotp(WebDriver driver) throws IOException {
 		try {
-			String adbPath = "C:\\adb\\platform-tools-latest-windows\\platform-tools\\adb.exe";
+			String adbPath = prop.getProperty("abd_path");
 			String command = adbPath
 					+ " shell content query --uri content://sms/inbox --projection _id,address,body,date";
 			Process process = Runtime.getRuntime().exec(command);
@@ -158,12 +118,12 @@ public class Common_Utility {
 				}
 			}
 			if (otp != null && otp.length() == 6) {
-				WebElement otpInputField1 = driver.findElement(By.xpath("(//input[@type='text'])[1]"));
-				WebElement otpInputField2 = driver.findElement(By.xpath("(//input[@type='text'])[2]"));
-				WebElement otpInputField3 = driver.findElement(By.xpath("(//input[@type='text'])[3]"));
-				WebElement otpInputField4 = driver.findElement(By.xpath("(//input[@type='text'])[4]"));
-				WebElement otpInputField5 = driver.findElement(By.xpath("(//input[@type='text'])[5]"));
-				WebElement otpInputField6 = driver.findElement(By.xpath("(//input[@type='text'])[6]"));
+				WebElement otpInputField1 = driver.findElement(By.xpath(loc.getProperty("otp_InputField1")));
+				WebElement otpInputField2 = driver.findElement(By.xpath(loc.getProperty("otp_InputField2")));
+				WebElement otpInputField3 = driver.findElement(By.xpath(loc.getProperty("otp_InputField3")));
+				WebElement otpInputField4 = driver.findElement(By.xpath(loc.getProperty("otp_InputField4")));
+				WebElement otpInputField5 = driver.findElement(By.xpath(loc.getProperty("otp_InputField5")));
+				WebElement otpInputField6 = driver.findElement(By.xpath(loc.getProperty("otp_InputField6")));
 				otpInputField1.sendKeys(Character.toString(otp.charAt(0)));
 				otpInputField2.sendKeys(Character.toString(otp.charAt(1)));
 				otpInputField3.sendKeys(Character.toString(otp.charAt(2)));
@@ -171,7 +131,7 @@ public class Common_Utility {
 				otpInputField5.sendKeys(Character.toString(otp.charAt(4)));
 				otpInputField6.sendKeys(Character.toString(otp.charAt(5)));
 				System.out.println("OTP entered: " + otp);
-				driver.findElement(By.xpath("//button[@type='button']")).click();
+				driver.findElement(By.xpath(loc.getProperty("submit_button"))).click();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -180,17 +140,24 @@ public class Common_Utility {
 	}
 
 	public ExtentReports createExtentReports(String testCaseName) {
-		String reportFolderPath = "C:\\Users\\User1\\eclipse-workspace\\Trythat.ai_Automation\\src\\test\\resources\\Reports\\";
-		File reportFolder = new File(reportFolderPath);
-		if (!reportFolder.exists()) {
-			reportFolder.mkdirs();
+		try {
+			String reportFolderPath = prop.getProperty("extentsreportsfolder_path");
+			File reportFolder = new File(reportFolderPath);
+			if (!reportFolder.exists()) {
+				reportFolder.mkdirs();
+			}
+			String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+			String reportFilePath = reportFolderPath + File.separator + testCaseName + "_ExtentReport_" + timestamp
+					+ ".html";
+			ExtentHtmlReporter htmlReporter = new ExtentHtmlReporter(reportFilePath);
+			ExtentReports extent = new ExtentReports();
+			extent.attachReporter(htmlReporter);
+			return extent;
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-		String reportFilePath = reportFolderPath + testCaseName + "_" + "ExtentReport_" + timestamp + "_" + ".html";
-		ExtentHtmlReporter htmlReporter = new ExtentHtmlReporter(reportFilePath);
-		ExtentReports extent = new ExtentReports();
-		extent.attachReporter(htmlReporter);
-		return extent;
+		return null;
 	}
 
 }
