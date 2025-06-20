@@ -1,9 +1,11 @@
 package Utilities;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
@@ -32,6 +34,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 public class Common_Utility {
 	public static Properties prop;
 	public static Properties loc;
+	private static BufferedWriter writer;
 
 	public Properties getConfigProperties() throws IOException {
 		prop = new Properties();
@@ -160,4 +163,40 @@ public class Common_Utility {
 		return null;
 	}
 
+	public static void initLogger(String testCaseName) {
+		try {
+			String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+			File logDir = new File("src/test/resources/logs");
+			if (!logDir.exists()) {
+				logDir.mkdirs();
+			}
+			File logFile = new File(logDir, testCaseName + "_ExecutionLog_" + timestamp + ".log");
+			writer = new BufferedWriter(new FileWriter(logFile));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void writeLog(String message) {
+		try {
+			if (writer != null) {
+				String time = new SimpleDateFormat("HH:mm:ss").format(new Date());
+				writer.write("[" + time + "] " + message);
+				writer.newLine();
+				writer.flush();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void stopLogger() {
+		try {
+			if (writer != null) {
+				writer.close();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

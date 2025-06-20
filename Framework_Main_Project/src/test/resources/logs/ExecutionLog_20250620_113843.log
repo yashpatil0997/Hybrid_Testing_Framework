@@ -1,0 +1,6 @@
+[11:38:43] ===== Test execution started =====
+[11:39:06] Launched Chrome browser and navigated to: https://mvnrepository.com/
+[11:39:06] Starting loginTest case
+[11:39:08] Entered username in search bar: Appcheopi
+[11:39:08] Screenshot taken after entering username
+[11:39:09] ===== Test execution completed =====

@@ -5,6 +5,7 @@
     <classes>
       <class name="Test_Cases.Test_0001">
         <methods>
+          <include name="teardown"/>
           <include name="setUp"/>
           <include name="login"/>
         </methods>
