@@ -150,9 +150,11 @@ public class Common_Utility {
 				reportFolder.mkdirs();
 			}
 			String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-			String reportFilePath = reportFolderPath + File.separator + testCaseName + "_ExtentReport_" + timestamp
-					+ ".html";
+			String reportFileName = testCaseName + "_ExtentReport_" + timestamp + ".html";
+			String reportFilePath = reportFolderPath + File.separator + reportFileName;
 			ExtentHtmlReporter htmlReporter = new ExtentHtmlReporter(reportFilePath);
+			htmlReporter.config().setDocumentTitle("Automation Report");
+			htmlReporter.config().setReportName("Test Report - " + testCaseName);
 			ExtentReports extent = new ExtentReports();
 			extent.attachReporter(htmlReporter);
 			return extent;

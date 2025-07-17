@@ -15,10 +15,9 @@ import Utilities.Screenshot;
 
 public class Test_0001 extends Base_Test {
 	@Test
-	public void login() throws IOException {
+	public void Validate_Pageload() throws IOException {
 		try {
 			Common_Utility commonUtility = new Common_Utility();
-			Common_Utility.writeLog("Starting loginTest case");
 			Properties prop = commonUtility.getConfigProperties();
 			Properties loc = commonUtility.getLocator();
 			ExcelReader Excel = new ExcelReader();
@@ -26,17 +25,14 @@ public class Test_0001 extends Base_Test {
 			// All for the logs
 			logInfo("Reading configuration and locators...");
 			logInfo("Entering username in search bar...");
-			logPass("Successfully entered username.");
 			// This for the Excel Sheet
 			String[][] testdata = Excel.getExcelData("TestSheet", 0, 0);
 			String username = testdata[0][0];
 			driver.findElement(By.xpath(loc.getProperty("search_bar"))).sendKeys(username);
 			// This for the Screen Shot
-			scr.takeScreenshot("test");
+			scr.takeScreenshot("Screen_of_SearchPage");
 			// This for the Report
-			ExtentReports extent = commonUtility.createExtentReports("Test_report");
-			ExtentTest test1 = extent.createTest("login via mobile", "This the test validation functionality");
-			test1.pass("OTP successfully entered");
+			logPass("Page loaded Successfully");
 			extent.flush();
 		} catch (Exception e) {
 			// All for the logs

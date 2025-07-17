@@ -16,6 +16,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.model.Test;
+
 import Utilities.Common_Utility;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -68,41 +70,41 @@ public class Base_Test {
 		String testName = method.getName();
 		Common_Utility.initLogger(testName);
 		Common_Utility.writeLog("===== Test Started: " + testName + " =====");
-
 		extent = commonUtility.createExtentReports(testName);
 		test = extent.createTest(testName);
 	}
 
 	@AfterMethod
 	public void tearDownTest(Method method) {
-		Common_Utility.writeLog("===== Test Ended: " + method.getName() + " =====");
+		String testName = method.getName();
+		Common_Utility.writeLog("===== Test Ended: " + testName + " =====");
 		Common_Utility.stopLogger();
-
 		if (extent != null) {
 			extent.flush();
 		}
 	}
 
 	@AfterTest
-	public void tearDown() {
+	public void tearDown() throws InterruptedException {
 		if (driver != null) {
+			Thread.sleep(1000);
 			driver.quit();
 		}
 	}
 
 	protected void logInfo(String message) {
 		Common_Utility.writeLog(message);
-		test.info(message);
+		if (test != null) test.info(message);
 	}
 
 	protected void logPass(String message) {
 		Common_Utility.writeLog(message);
-		test.pass(message);
+		if (test != null) test.pass(message);
 	}
 
 	protected void logFail(String message) {
 		Common_Utility.writeLog(message);
-		test.fail(message);
+		if (test != null) test.fail(message);
 	}
 
 }

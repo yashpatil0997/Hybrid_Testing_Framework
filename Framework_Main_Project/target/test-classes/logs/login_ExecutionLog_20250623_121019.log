@@ -1,0 +1,6 @@
+[12:10:19] ===== Test Started: login =====
+[12:10:24] Starting loginTest case
+[12:10:24] Reading configuration and locators...
+[12:10:24] Entering username in search bar...
+[12:10:24] Successfully entered username.
+[12:10:27] ===== Test Ended: login =====
